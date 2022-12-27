@@ -27,7 +27,13 @@ class View
         //CONTEUDO DE VIEW
         $contentView = self::getContentView($view);
 
+        //CHAVES DO ARRAY
+        $keys = array_keys($vars);
+        $keys = array_map(function ($item) {
+            return '{{' . $item . '}}';
+        }, $keys);
+
         //RETORNA O CONTEUDO ENDERIZADO 
-        return $contentView;
+        return str_replace($keys, array_values($vars), $contentView);
     }
 }
