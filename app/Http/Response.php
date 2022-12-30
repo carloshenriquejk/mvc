@@ -4,70 +4,86 @@ namespace App\Http;
 
 class Response
 {
+
+
     /**
-     * Codigo do status HTTP 
-     * @var interger
+     * Código do status http
      */
+
     private $httpCode = 200;
 
     /**
-     * cabeçalho do response  
-     * @var interger
+     * Cabeçalho do response 
+     * @var array
      */
     private $headers = [];
 
     /**
-     *tipo do conteudo que está sendo retornado
-     * @var string
+     * Tipo de conteudi que está sendo retornado 
+     * @var integer
      */
     private $contentType = 'text/html';
 
     /**
-     *tipo do conteudo que está sendo retornado
-     * @var mixed
+     * conteudo do  response
+     * @var integer
      */
     private $content;
 
-    /** 
-     * METODO RESPONSAVEL POR INICIAR A CLASSE E DEFINIR OS VALORES
-     * @param integer $HTTPCODE
+    /**
+     * metodo responsavel por iniciar a classe e definir os valores
+     * @param integer $httpCode
      * @param mixed $content
-     * @param string $contentType
+     * @param integer $contentType
      */
     public function __construct($httpCode, $content, $contentType = 'text/html')
     {
         $this->httpCode = $httpCode;
-        $this->$content = $content;
+        $this->content  = $content;
         $this->setContentType($contentType);
     }
-
     /**
      * metodo responsavel por alterar o content type do response
      * @param string $contentType
      */
-    public function setContentType($contentType)
+    public function  setContentType($contentType)
     {
         $this->contentType = $contentType;
-        $this->addHeandle('Content-type', $contentType);
+        $this->addHeader('content-type', $contentType);
     }
 
     /**
-     * metodo responsavel por adicionar um registro no cabeçalho do response
-     * @param string $key
-     * @param strng $value
+     * metodo responsavel por adicionar um registro no vcabeçalho do response
      */
-    public function addHeandle($key, $value)
+    public function addHeader($key, $values)
     {
-        $this->header[$key] = $value;
+        $this->headers[$key] = $values;
     }
 
     /**
-     * metodo responsavel por enviar a resposta para o usuario 
+     * metodo responsavel por enviar os headers para o navegador
+     */
+    public  function sendHeaders()
+    {
+        //STATUS
+        http_response_code($this->httpCode);
+
+        //ENVIAR OS HEADERS
+        foreach ($this->headers as $key => $value) {
+            header($key . ':' . $value);
+        }
+    }
+    /**
+     * metodo responsavel por enviar a respósta para o usuario
      */
     public function sendResponse()
     {
+        // ENVIA OS HEADERS
+        $this->sendHeaders();
+
+        // IMPRIME O CONTEÚDO.
         switch ($this->contentType) {
-            case 'text/html':
+            case 'text/html';
                 echo $this->content;
                 exit;
         }
