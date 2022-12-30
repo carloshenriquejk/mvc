@@ -90,6 +90,6 @@ class Request
      */
     public function getURI()
     {
-        return $this->URI;
+        return $this->uri;
     }
 }
